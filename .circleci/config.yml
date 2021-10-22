@@ -17,6 +17,22 @@ jobs:
       - run:
           name: "Say hello"
           command: "echo Hello, World!"
+  say-first-word:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+        name: "Say 1st word"
+        command: "echo Que "
+  say-second-word:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - run:
+        name: "Say 2dn word"
+        command: "echo onda!!"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -24,3 +40,9 @@ workflows:
   say-hello-workflow:
     jobs:
       - say-hello
+  say-two-words:
+    jobs:
+      - say-first-word
+      - say-second-word
+        requires:
+          - say-first-word
