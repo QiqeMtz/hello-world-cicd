@@ -43,6 +43,6 @@ workflows:
   say-two-words:
     jobs:
       - say-first-word
-      - say-second-word
+      - say-second-word:
         requires:
           - say-first-word
