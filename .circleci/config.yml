@@ -41,6 +41,16 @@ jobs:
       - run:
           name: "echo an env var that is part of our project showing the devs name"
           command: "echo The developers name is $MY_NAME !!"
+  print-dev-name-env-docker:
+    docker:
+      - image: cimg/base:stable
+        environment:
+          MY_LOCAL_NAME: Enrique
+    steps:
+      - checkout
+      - run:
+          name: "echo an env var that is part of our project showing the devs name"
+          command: "echo The developers name is $MY_LOCAL_NAME !!"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -57,3 +67,6 @@ workflows:
   say-myname-workflow:
     jobs:
       - print-dev-name
+  say-myname-workflow-2:
+    jobs:
+      - print-dev-name-env-docker
