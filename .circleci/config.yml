@@ -38,18 +38,20 @@ jobs:
       - checkout
       - run:
           name: "Save output"
-          command: echo "Hello world" > output.txt
+          command: |
+            cat hola.txt
+            echo "Hello world" > output.txt
       - persist_to_workspace:
-          root: /tmp
+          root: ~/tmp
           paths:
-            - ./output.txt
+            - output.txt
   get-hello-output:
     docker:
       - image: cimg/base:stable
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp
+          at: ~/tmp
       - run:
           name: "Get output"
           command: cat output.txt
