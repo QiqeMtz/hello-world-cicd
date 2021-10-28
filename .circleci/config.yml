@@ -39,7 +39,7 @@ jobs:
       - run:
           name: "Save output"
           command: echo "Hello world" > output.txt
-      - persists_to_workspace:
+      - persist_to_workspace:
           root: /tmp/dir
           paths:
             - output.txt
