@@ -8,9 +8,9 @@ workflows:
   say-hello-workflow:
     jobs:
       - save-hello-output
-      - get-hello-output
+      - get-hello-output:
           requires:
-              - save-hello-output
+            - save-hello-output
   # say-two-words-workflow:
   #   jobs:
   #     - say-first-word
