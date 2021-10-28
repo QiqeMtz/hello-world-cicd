@@ -40,7 +40,7 @@ jobs:
           name: "Save output"
           command: echo "Hello world" > output.txt
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: /tmp
           paths:
             - output.txt
   get-hello-output:
@@ -49,7 +49,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /tmp/workspace
+          at: /tmp
       - run:
           name: "Get output"
           command: cat output.txt
