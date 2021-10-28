@@ -42,7 +42,7 @@ jobs:
             cat hello.txt
             echo "Hello world" > output.txt
       - persist_to_workspace:
-          root: ~/tmp
+          root: ~/
           paths:
             - output.txt
   get-hello-output:
@@ -51,7 +51,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/tmp
+          at: ~/
       - run:
           name: "Get output"
           command: cat output.txt
