@@ -39,7 +39,7 @@ jobs:
       - run:
           name: "Save output"
           command: |
-            cat ~/hola.txt
+            cat hello.txt
             echo "Hello world" > output.txt
       - persist_to_workspace:
           root: ~/tmp
