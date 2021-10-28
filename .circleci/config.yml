@@ -2,10 +2,32 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  say-hello-workflow:
+    jobs:
+      - save-hello-output
+      - get-hello-output
+          requires:
+              - save-hello-output
+  # say-two-words-workflow:
+  #   jobs:
+  #     - say-first-word
+  #     - say-second-word:
+  #         requires:
+  #           - say-first-word
+  # say-myname-workflow:
+  #   jobs:
+  #     - print-dev-name
+  # say-myname-workflow-2:
+  #   jobs:
+  #     - print-dev-name-env-docker
+
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
+  save-hello-output:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
@@ -15,58 +37,54 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-  say-first-word:
+          name: "Save output"
+          command: echo "Hello world" > output.txt
+      - persists_to_workspace:
+          root: /tmp/dir
+          paths:
+            - output.txt
+  get-hello-output:
     docker:
       - image: cimg/base:stable
     steps:
       - checkout
+      - attach_workspace:
+          at: /tmp/dir
       - run:
-          name: "Say 1st word"
-          command: "echo Que "
-  say-second-word:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - run:
-          name: "Say 2dn word"
-          command: "echo onda!!"
-  print-dev-name:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - run:
-          name: "echo an env var that is part of our project showing the devs name"
-          command: "echo The developers name is $MY_NAME !!"
-  print-dev-name-env-docker:
-    docker:
-      - image: cimg/base:stable
-        environment:
-          MY_LOCAL_NAME: Enrique
-    steps:
-      - checkout
-      - run:
-          name: "echo an env var that is part of our project showing the devs name"
-          command: "echo The developers name is $MY_LOCAL_NAME !!"
+          name: "Get output"
+          command: cat output.txt
+  # say-first-word:
+  #   docker:
+  #     - image: cimg/base:stable
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "Say 1st word"
+  #         command: "echo Que "
+  # say-second-word:
+  #   docker:
+  #     - image: cimg/base:stable
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "Say 2dn word"
+  #         command: "echo onda!!"
+  # print-dev-name:
+  #   docker:
+  #     - image: cimg/base:stable
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "echo an env var that is part of our project showing the devs name"
+  #         command: "echo The developers name is $MY_NAME !!"
+  # print-dev-name-env-docker:
+  #   docker:
+  #     - image: cimg/base:stable
+  #       environment:
+  #         MY_LOCAL_NAME: Enrique
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "echo an env var that is part of our project showing the devs name"
+  #         command: "echo The developers name is $MY_LOCAL_NAME !!"
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
-workflows:
-  say-hello-workflow:
-    jobs:
-      - say-hello
-  say-two-words-workflow:
-    jobs:
-      - say-first-word
-      - say-second-word:
-          requires:
-            - say-first-word
-  say-myname-workflow:
-    jobs:
-      - print-dev-name
-  say-myname-workflow-2:
-    jobs:
-      - print-dev-name-env-docker
