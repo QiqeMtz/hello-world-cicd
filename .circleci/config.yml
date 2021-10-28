@@ -38,9 +38,7 @@ jobs:
       - checkout
       - run:
           name: "Save output"
-          command: |
-            cat hello.txt
-            echo "Hello world" > output.txt
+          command: echo "Hello world" > ~/output.txt
       - persist_to_workspace:
           root: ~/
           paths:
@@ -54,7 +52,7 @@ jobs:
           at: ~/
       - run:
           name: "Get output"
-          command: cat output.txt
+          command: cat ~/output.txt
   # say-first-word:
   #   docker:
   #     - image: cimg/base:stable
