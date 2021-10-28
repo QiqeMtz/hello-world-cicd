@@ -42,7 +42,7 @@ jobs:
       - persist_to_workspace:
           root: /tmp
           paths:
-            - /tmp/output.txt
+            - output.txt
   get-hello-output:
     docker:
       - image: cimg/base:stable
