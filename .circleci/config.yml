@@ -16,7 +16,7 @@ commands:
 workflows:
   say-hello-workflow:
     jobs:
-      - execute-command
+      - job-intentionally-fail
   # say-two-words-workflow:
   #   jobs:
   #     - say-first-word
@@ -40,6 +40,18 @@ jobs:
         - checkout
         - say-hello:
             to: "Command executed from a job"
+  job-intentionally-fail:
+      docker:
+        - image: cimg/base:stable
+      steps:
+        - checkout
+        - run:
+            name: "Step that fails"
+            command: return 1
+        - run:
+            name: "step that is executed if any other fail"
+            command: echo "Any step failed"
+            when: on_fail
   # save-hello-output:
   #   # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
   #   # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
