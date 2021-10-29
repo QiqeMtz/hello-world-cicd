@@ -2,15 +2,21 @@
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
+commands:
+  say-hello:
+    description: "A very simple command"
+    parameters:
+      to:
+        type: string
+        default: "Hello world"
+    steps:
+      - run: echo << parameters.to >>
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   say-hello-workflow:
     jobs:
-      - save-hello-output
-      - get-hello-output:
-          requires:
-            - save-hello-output
+      - execute-command
   # say-two-words-workflow:
   #   jobs:
   #     - say-first-word
@@ -27,32 +33,39 @@ workflows:
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  save-hello-output:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
-    steps:
-      - checkout
-      - run:
-          name: "Save output"
-          command: echo "Hello world" > ~/output.txt
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - output.txt
-  get-hello-output:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/
-      - run:
-          name: "Get output"
-          command: cat ~/output.txt
+  execute-command:
+      docker:
+        - image: cimg/base:stable
+      steps:
+        - checkout
+        - say-hello:
+            to: "Command executed from a job"
+  # save-hello-output:
+  #   # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+  #   # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+  #   docker:
+  #     - image: cimg/base:stable
+  #   # Add steps to the job
+  #   # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: "Save output"
+  #         command: echo "Hello world" > ~/output.txt
+  #     - persist_to_workspace:
+  #         root: ~/
+  #         paths:
+  #           - output.txt
+  # get-hello-output:
+  #   docker:
+  #     - image: cimg/base:stable
+  #   steps:
+  #     - checkout
+  #     - attach_workspace:
+  #         at: ~/
+  #     - run:
+  #         name: "Get output"
+  #         command: cat ~/output.txt
   # say-first-word:
   #   docker:
   #     - image: cimg/base:stable
